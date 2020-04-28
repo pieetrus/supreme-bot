@@ -83,13 +83,22 @@ def get_source_code(url):
 
     return text
 
-def get_item_url(key):
+def get_item_url(key, color):
     code = get_source_code("https://www.supremenewyork.com/shop/all/sweatshirts")
-    position = code.find(key)
-    code = code[position:len(code)-1]
-    key_link = "href=\""
-    position = code.find(key_link)
-    code = code[position + len(key_link):position+100]
+    while(True):
+        position = code.find(key)
+        code = code[position:len(code)-1]
+        index = code[0:200].find(color)
+        if(index!=-1):
+            key_link = "href=\""
+            position = code.find(key_link)
+            code = code[position + len(key_link):position+200]
+            break
+        else:
+            #uciecie na poczatku zeby nie znajdowalo znowu tej samej kolorystyki co wczesniej
+            code = code[len(key):len(code)-1]
+
+
     code_parts = code.split("\"")
     print(code_parts[0])
     return "https://www.supremenewyork.com/" + code_parts[0]
@@ -97,7 +106,7 @@ def get_item_url(key):
 
 
 if __name__ == '__main__':
-    keys["product_url"]= get_item_url("Digital")
+    keys["product_url"]= get_item_url("Digital", "Grey")
     options = webdriver.ChromeOptions()
     options.add_argument('user-data-dir=www.supremenewyork.com')
     #options.add_argument('--headless')
