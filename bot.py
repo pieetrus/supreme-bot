@@ -1,5 +1,7 @@
 from selenium import webdriver
 from config import keys
+import urllib.request as urllib2
+import urllib.error as url_error
 import time
 from selenium.webdriver.chrome.options import Options
 
@@ -14,11 +16,6 @@ def timeme(method):
         return result
     return wrapper
 
-options = webdriver.ChromeOptions()
-options.add_argument('user-data-dir=www.supremenewyork.com')
-# options.add_argument('--headless')
-# options.add_experimental_option("detach", True)
-driver = webdriver.Chrome(options=options)
 
 
 def card(year):
@@ -30,7 +27,7 @@ def card(year):
     return lst.index(year)
 
 @timeme
-def order(k):
+def order(driver, k):
     #get product
     driver.get(k['product_url'])
     #add to basket
@@ -69,9 +66,43 @@ def order(k):
 
 
     #process payment
-    # driver.find_element_by_xpath('//*[@id="pay"]/input').click()
+    driver.find_element_by_xpath('//*[@id="pay"]/input').click()
+
+def get_source_code(url):
+    print(url)
+    text=''
+    try:
+        response = urllib2.urlopen(url)
+        text = str(response.read())
+    except url_error.HTTPError as f:
+        print("Brak odpowiedzi od serwera")
+        print('Error code: ', f.code)
+    except url_error.URLError as e:
+        print("Zły url")
+        print('Error code: ', e.reason)
+
+    return text
+
+def get_item_url(key):
+    code = get_source_code("https://www.supremenewyork.com/shop/all/sweatshirts")
+    position = code.find(key)
+    code = code[position:len(code)-1]
+    key_link = "href=\""
+    position = code.find(key_link)
+    code = code[position + len(key_link):position+100]
+    code_parts = code.split("\"")
+    print(code_parts[0])
+    return "https://www.supremenewyork.com/" + code_parts[0]
 
 
 
 if __name__ == '__main__':
-    order(keys)
+    keys["product_url"]= get_item_url("Digital")
+    options = webdriver.ChromeOptions()
+    options.add_argument('user-data-dir=www.supremenewyork.com')
+    #options.add_argument('--headless')
+    #options.add_experimental_option("detach", True)
+    driver = webdriver.Chrome(options=options)
+    order(driver,keys)
+    
+

@@ -1,5 +1,4 @@
 keys = {
-    "product_url": "https://www.supremenewyork.com/shop/sweatshirts/e753vgfz2/ff039n2jp",
     "name": "Name Sruname",
     "email": "email@gmail.com",
     "phone_number": "111222333",
