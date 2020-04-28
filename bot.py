@@ -31,6 +31,7 @@ def order(driver, k):
     #get product
     driver.get(k['product_url'])
     #add to basket
+    time.sleep(0.5)
     driver.find_element_by_xpath('//*[@id="add-remove-buttons"]/input').click()
     time.sleep(0.1)
     #go to basket
@@ -83,8 +84,8 @@ def get_source_code(url):
 
     return text
 
-def get_item_url(key, color):
-    code = get_source_code("https://www.supremenewyork.com/shop/all/sweatshirts")
+def get_item_url(key, color, category):
+    code = get_source_code("https://www.supremenewyork.com/shop/all/" + category)
     while(True):
         position = code.find(key)
         code = code[position:len(code)-1]
@@ -106,7 +107,7 @@ def get_item_url(key, color):
 
 
 if __name__ == '__main__':
-    keys["product_url"]= get_item_url("Digital", "Grey")
+    keys["product_url"]= get_item_url(key = "Digital", color = "Black", category="sweatshirts")
     options = webdriver.ChromeOptions()
     options.add_argument('user-data-dir=www.supremenewyork.com')
     #options.add_argument('--headless')
