@@ -2,7 +2,7 @@ main()
 
 function alertBox(){
   setTimeout(function() {
-    getProducts();  // You used `el`, not `element`?
+    getProducts(); 
   }, 300);
 
 }
@@ -15,37 +15,49 @@ function getProducts() {
       continue;
     }
     //pod i+2 jest kolor jak co ;]]
-    if(matches[i+1].textContent.toLowerCase().includes("bloody")){
-      matches[i+1].click();
-      break;
+    if(matches[i+1].textContent.toLowerCase().includes("my")){
+      if(matches[i+1].textContent.toLowerCase().includes("bloody")){
+        if(matches[i+2].textContent.toLowerCase().includes("grey")){
+          matches[i+1].click();
+          break;
+        }
+      }
     }
+    
   }
   setTimeout(function() {
-    setSize("Large");  // You used `el`, not `element`?
+    setSize("large", "medium"); 
   }, 1500);
 }
 
-function setSize(sizeName) {  
-  let getSizeValue = function (name){
+function setSize(sizeName, sizeName2) {  
+  let getSizeValue = function (name, name2){
       let sizes = document.querySelectorAll('select option');
-          for (var i = sizes.length - 1; i >= 0; i--) {
-      if (sizes[i].textContent.toLowerCase() === name.toLowerCase()) {
-          return sizes[i].value;
+      for (var i = sizes.length - 1; i >= 0; i--) {
+        if (sizes[i].textContent.toLowerCase() === name.toLowerCase()) {
+            return sizes[i].value;
+        }
       }
-    }
+
+      for (var i = sizes.length - 1; i >= 0; i--) {
+        if (sizes[i].textContent.toLowerCase() === name2.toLowerCase()) {
+            return sizes[i].value;
+        }
+      }
+
   } 
-  document.getElementsByName('size')[0].value = getSizeValue(sizeName);
+  document.getElementsByName('size')[0].value = getSizeValue(sizeName,sizeName2);
 
   document.getElementsByName('commit')[0].click();
   setTimeout(function() {
-    goToCheckout();  // You used `el`, not `element`?
+    goToCheckout();
   }, 300);
 }
 
 function goToCheckout(){
   document.getElementsByClassName('checkout')[0].click();
   setTimeout(function() {
-    fillInForm();  // You used `el`, not `element`?
+    fillInForm();
   }, 300);
 }
 
